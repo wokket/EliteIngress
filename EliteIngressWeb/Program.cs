@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NetMQ.Sockets;
 using System;
 using System.IO;
 
@@ -11,6 +12,8 @@ namespace EliteIngressWeb
 {
     class Program
     {
+        internal static PublisherSocket Publisher;
+
         static int Main(string[] args)
         {
 
@@ -39,8 +42,13 @@ namespace EliteIngressWeb
                })
                .Build();
 
+                using (Publisher = new PublisherSocket())
+                {
+                    Publisher.Options.SendHighWatermark = 1000;
+                    Publisher.Bind("tcp://localhost:9500");
 
-                host.Run();
+                    host.Run();
+                }
 
                 return 0;
             }
