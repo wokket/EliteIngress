@@ -37,5 +37,5 @@ def journal_entry(cmdr, is_beta, system, station, entry, state):
 
     #print(requestBody)
 
-    r = requests.put("http://localhost:9008/", json=requestBody, headers={'Content-Type': 'application/json'})
+    r = requests.put("https://epprts1.wokket.com/", json=requestBody, headers={'Content-Type': 'application/json'})
     print(r.status_code)

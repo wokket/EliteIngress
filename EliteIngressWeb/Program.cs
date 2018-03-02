@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
-using Serilog.Events;
 using System;
 using System.IO;
 
@@ -13,18 +11,8 @@ namespace EliteIngressWeb
 {
     class Program
     {
-        internal static ILogger Log;
-
         static int Main(string[] args)
         {
-            Log = new LoggerConfiguration()
-                       .WriteTo.Console()
-                       .MinimumLevel.Debug()
-                       .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                       .Enrich.FromLogContext()
-                       .CreateLogger();
-
-            Serilog.Log.Logger = Log;
 
             try
             {
@@ -38,9 +26,7 @@ namespace EliteIngressWeb
                 var host = WebHost.CreateDefaultBuilder(args)
                .UseKestrel()
                .UseConfiguration(config)
-               .UseContentRoot(Directory.GetCurrentDirectory())
-               .UseUrls("http://*:9008")
-               .UseSerilog()
+               .UseUrls("http://*:5000")
                .ConfigureServices(s => s.AddRouting())
                .Configure(app =>
                {
@@ -60,12 +46,8 @@ namespace EliteIngressWeb
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Host terminated unexpectedly");
+                Console.WriteLine(ex.ToString());
                 return 1;
-            }
-            finally
-            {
-                Serilog.Log.CloseAndFlush();
             }
         }
 
