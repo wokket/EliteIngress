@@ -18,9 +18,14 @@ namespace EliteIngressWeb
 
                 //produce asynchronously for best throughput
                 var deliveryReport = Program.Producer.ProduceAsync("commanders", null, body);
-                deliveryReport.ContinueWith(task => {
-                    Console.WriteLine($"Partition: {task.Result.Partition}, Offset: {task.Result.Offset}");
+                deliveryReport.ContinueWith(task =>
+                {
+                    if (task.Result.Error.ToString() != "Success")
+                    {
+                        Console.WriteLine($"{task.Result.Error}: Partition: {task.Result.Partition}, Offset: {task.Result.Offset}");
+                    }
                 });
+                //Console.WriteLine($"ERROR: {deliveryReport.Error} Partition: {deliveryReport.Partition}, Offset: {deliveryReport.Offset}");
             }
 
             context.Response.StatusCode = 200;

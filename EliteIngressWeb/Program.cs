@@ -46,10 +46,15 @@ namespace EliteIngressWeb
                .Build();
 
 
-                var kafkaConfig = new Dictionary<string, object> { { "bootstrap.servers", "localhost:9092" } };
+                var kafkaConfig = new Dictionary<string, object> {
+                        { "bootstrap.servers", "localhost:9092" }, //where to connect
+                        { "socket.keepalive.enable", true},
+                        { "queue.buffering.max.ms", 1}, // How long to buffer messages locally before flushing them to the broker
+                    };
 
                 using (Producer = new Producer<Null, string>(kafkaConfig, null, new StringSerializer(Encoding.UTF8)))
                 {
+
                     Console.WriteLine($"Kafka producer {Producer.Name} running...");
                     host.Run(); //this blocks untill close time
 
