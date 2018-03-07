@@ -4,15 +4,18 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NetMQ.Sockets;
+using Confluent.Kafka;
 using System;
 using System.IO;
+using System.Collections.Generic;
+using Confluent.Kafka.Serialization;
+using System.Text;
 
 namespace EliteIngressWeb
 {
     class Program
     {
-        internal static PublisherSocket Publisher;
+        internal static Producer<Null, string> Producer;
 
         static int Main(string[] args)
         {
@@ -42,13 +45,15 @@ namespace EliteIngressWeb
                })
                .Build();
 
-                using (Publisher = new PublisherSocket())
-                {
-                    Publisher.Options.SendHighWatermark = 1000;
-                    Publisher.Bind("tcp://*:9500");
-                    Console.Out.WriteLine("0MQ Publisher listening on tcp://*:9500");
 
-                    host.Run();
+                var kafkaConfig = new Dictionary<string, object> { { "bootstrap.servers", "localhost:9092" } };
+
+                using (Producer = new Producer<Null, string>(kafkaConfig, null, new StringSerializer(Encoding.UTF8)))
+                {
+                    Console.WriteLine($"Kafka producer {Producer.Name} running...");
+                    host.Run(); //this blocks untill close time
+
+                    Producer.Flush(TimeSpan.FromSeconds(10)); //we might have messages in the air, clear them...
                 }
 
                 return 0;

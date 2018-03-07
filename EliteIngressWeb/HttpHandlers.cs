@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using NetMQ;
+
 
 namespace EliteIngressWeb
 {
@@ -11,11 +11,16 @@ namespace EliteIngressWeb
         internal static async Task PutJson(HttpContext context)
         {
 
-            using (var streamReader = new StreamReader(context.Request.Body)) {
+            using (var streamReader = new StreamReader(context.Request.Body))
+            {
                 var body = await streamReader.ReadToEndAsync();
                 Console.Out.WriteLine($"Received Json: {body}");
-                Program.Publisher.SendFrame(body);
 
+                //produce asynchronously for best throughput
+                var deliveryReport = Program.Producer.ProduceAsync("commanders", null, body);
+                deliveryReport.ContinueWith(task => {
+                    Console.WriteLine($"Partition: {task.Result.Partition}, Offset: {task.Result.Offset}");
+                });
             }
 
             context.Response.StatusCode = 200;

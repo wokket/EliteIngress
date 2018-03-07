@@ -3,11 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EliteIngressWeb", "EliteIngressWeb\EliteIngressWeb.csproj", "{2996DFFC-4284-4BA2-BFB9-896A8949144A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EliteIngressWeb", "EliteIngressWeb\EliteIngressWeb.csproj", "{2996DFFC-4284-4BA2-BFB9-896A8949144A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EDMC Plugin", "EDMC Plugin", "{D35F882D-11BD-4947-9255-0ECD4458631A}"
 	ProjectSection(SolutionItems) = preProject
 		load.py = load.py
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{FA5FFD90-63D7-4B3C-80E3-9081B07A5650}"
+	ProjectSection(SolutionItems) = preProject
+		kafka_install.sh = kafka_install.sh
 	EndProjectSection
 EndProject
 Global
