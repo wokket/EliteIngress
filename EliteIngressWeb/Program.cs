@@ -45,7 +45,8 @@ namespace EliteIngressWeb
                 using (Publisher = new PublisherSocket())
                 {
                     Publisher.Options.SendHighWatermark = 1000;
-                    Publisher.Bind("tcp://localhost:9500");
+                    Publisher.Bind("tcp://*:9500");
+                    Console.Out.WriteLine("0MQ Publisher listening on tcp://*:9500");
 
                     host.Run();
                 }

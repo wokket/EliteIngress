@@ -13,9 +13,8 @@ namespace EliteIngressWeb
 
             using (var streamReader = new StreamReader(context.Request.Body)) {
                 var body = await streamReader.ReadToEndAsync();
-                Console.WriteLine($"Received Json: {body}");
-
-                Program.Publisher.SendMoreFrame("").SendFrame(body);
+                Console.Out.WriteLine($"Received Json: {body}");
+                Program.Publisher.SendFrame(body);
 
             }
 
